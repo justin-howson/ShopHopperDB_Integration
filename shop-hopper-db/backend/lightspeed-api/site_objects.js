@@ -3,7 +3,7 @@ site_objects.js - This file only contains 'SITE_OBJECTS' a constant array of obj
 that the function needs to find the product urls for a given site.
 */
 const SITE_OBJECTS = [
-    FOSSELLOS = {
+    {
         baseUrl : [
             "https://www.fossellos.com/shop/tops/",
             "https://www.fossellos.com/shop/tanks/",
@@ -39,7 +39,7 @@ const SITE_OBJECTS = [
     //     bodyHtmlSelector : ".clearfix"
     // },
 
-    ENVY_APPAREL = {
+    /*{
         baseUrl : ["https://shop.envyapparelfit.com/shop/"],
         paginationSelector : "div.pagination > ul > li", 
         productListSelector : "div.products-list", 
@@ -47,7 +47,7 @@ const SITE_OBJECTS = [
         bodyHtmlSelector : "div.product-description"
     },
 
-    HONEST_BOUTIQUE = {
+    {
         baseUrl : ["https://www.honestboutique.ca/clothing/"],
         paginationSelector : "div.pagination > ul > li", 
         productListSelector : "div.products-list", 
@@ -55,7 +55,7 @@ const SITE_OBJECTS = [
         bodyHtmlSelector : "div.product-description"
     },
 
-    ARTFUL_HAND = {
+    {
         baseUrl : ["https://www.theartfulhandstores.com/clothing/"],
         paginationSelector : '',
         productListSelector : 'ul.list-collection',
@@ -64,7 +64,7 @@ const SITE_OBJECTS = [
 
     },
   
-    ONE_BOARD = {
+    {
         baseUrl : [
             "https://www.oneboardshop.com/snow/womens-outerwear/womens-jackets/",
             "https://www.oneboardshop.com/snow/womens-outerwear/womens-pants/",
@@ -84,7 +84,7 @@ const SITE_OBJECTS = [
         removeNodes : [".cf"],
     },
   
-    ATTRIDGE = {
+    {
         baseUrl : [
             "https://www.attridge.ca/women/womens-tops/",
             "https://www.attridge.ca/women/sandals/",
@@ -98,7 +98,7 @@ const SITE_OBJECTS = [
         productLinkSelector : "h3.title > a",
         bodyHtmlSelector : ".module-product > div > div > p"
     },
-    STRUT_FOOTWEAR = {
+    {
         baseUrl : [
             "https://www.strutfootwear.com/footwear/shoes/",
             "https://www.strutfootwear.com/footwear/boots/",
@@ -108,7 +108,7 @@ const SITE_OBJECTS = [
         productListSelector: "div.products-list",
         productLinkSelector: ".product-image-wrapper",
         bodyHtmlSelector: "div.product-description", 
-    }
+    }*/
 ]
 
 module.exports = { SITE_OBJECTS }

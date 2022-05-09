@@ -6,7 +6,7 @@ get[Datapoint] - Each of these functions returns [Datapoint] from the .ajax site
 */
 
 const fetch = require('node-fetch');
-fs = require('fs');
+//fs = require('fs');
 
 const so = require('./site_objects.js');
 const url_scraper = require('./product_url_scraper');
@@ -17,7 +17,7 @@ const body_html = [];
 
 console.time("execution")
 
-async function main() {
+export async function main() {
 
     for (var i = 0; i < so.SITE_OBJECTS.length; i++) {
         product_urls.push(await url_scraper.scrapeProductUrls(so.SITE_OBJECTS[i]))
@@ -53,7 +53,7 @@ async function main() {
     await console.log("Number of items scraped: " + result.length);
 
     //Write to output file
-    fs.writeFileSync('./lightspeedOutputJson.json', JSON.stringify(result, null, 4));
+    //fs.writeFileSync('./lightspeedOutputJson.json', JSON.stringify(result, null, 4));
     console.timeEnd("execution");
 }
 
@@ -120,7 +120,7 @@ async function getImages(productJson) {
     let finalImage = "";
     try {
         images.forEach(async image => {
-            imageSplit = await image.split('/')
+            let imageSplit = await image.split('/')
             imageSplit[7] = '500x500x2'
             image = imageSplit.toString();
 
@@ -170,8 +170,8 @@ async function getUrl(productJson) {
 
 async function scrapeBusinessName(productJson) {
     const url = await getUrl(productJson);
-    startPos = url.indexOf('.');
-    endPos = url.indexOf('.', startPos + 1);
+    let startPos = url.indexOf('.');
+    let endPos = url.indexOf('.', startPos + 1);
 
     return url.substring(startPos + 1, endPos);
 
@@ -189,4 +189,4 @@ async function sleep(miliseconds)
     return new Promise(resolve => setTimeout(resolve,miliseconds));
 }
 
-main();
+//main();

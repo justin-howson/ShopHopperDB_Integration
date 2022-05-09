@@ -1,3 +1,5 @@
+import { data } from 'cheerio/lib/api/attributes';
+
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
@@ -38,17 +40,21 @@ async function scrapeMain(url,page) {
 
         const url = titleElement.find('a').attr('href');
 
+        const place_id = null;
+        
+        const handle = null;
+
         const vendor = business_name;
 
-        return{id,title,business_name,url,vendor};
+        return{id,title,business_name,url,place_id,handle,vendor};
     }).get();
        
         finalres.push(result);
         
     }
 
-  finalres = finalres.flat();
-  return finalres;
+  data = finalres.flat();
+  return data;
 }
 
 async function scrapeSecondary(item,page)
@@ -61,7 +67,8 @@ async function scrapeSecondary(item,page)
         const $ = await cheerio.load(html);
         await sleep(1000);
         
-        
+        item[i].tags = [];
+         
         //get sizes and colors to make variants
         let sizes = [];
         $(".form-option-variant").each((index,element) => 
@@ -94,20 +101,45 @@ async function scrapeSecondary(item,page)
        
             return{src,position};
         }).get();
+
+        item[i].options = null;
+
+        item[i].rating = null;
+
       
        
     //body html
     item[i].body_html = $("#description-content").html();
+    
+    item[i].created_at = Date.now();
+
+
+
       
     //product_type
     item[i].product_type = $(".breadcrumbs li:nth-child(2)").text().trim();
+
+    item[i].published_at = Date.now();
+
+    item[i].updated_at = Date.now();
          
     //colors
     item[i].colors = colors;
+
+    item[i].gender = null;
+
+
  
     //price
     item[i].compare_at_price = price;
     item[i].original_price = price;
+
+    item[i].sizes = [];
+    item[i].buckets = [];
+    item[i].is_on_sale = null;
+    item[i].sale_ratio = null;
+    item[i].is_available = null;
+
       
     }
 
@@ -174,7 +206,7 @@ async function get_variants(price,colors,sizes)
 
 
 //main function to call all scraping functions
-async function m()
+export async function main()
 {
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
@@ -190,7 +222,7 @@ async function m()
     await writeJSOn("backend/AlpacaScraper/alpaca.json",data);
 }
 
-m();
+//m();
 
 
 //---------------utility functions--------------------------------//
