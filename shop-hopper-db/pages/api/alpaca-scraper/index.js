@@ -1,4 +1,4 @@
-import { main } from '../../../backend/lightspeed-api';
+import { main } from '../../../backend/AlpacaScraper';
 import prisma from '../../../prisma/prisma.js';
 
 
