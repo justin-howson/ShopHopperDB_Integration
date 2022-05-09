@@ -174,7 +174,7 @@ async function get_variants(price,colors,sizes)
 
 
 //main function to call all scraping functions
-async function m()
+export async function main()
 {
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
@@ -190,7 +190,7 @@ async function m()
     await writeJSOn("backend/AlpacaScraper/alpaca.json",data);
 }
 
-m();
+//m();
 
 
 //---------------utility functions--------------------------------//

@@ -1,7 +1,6 @@
 import { main } from '../../../backend/AlpacaScraper';
 import prisma from '../../../prisma/prisma.js';
 
-
 export default async (req, res) => {
     try {
         const { business_name, product_type } = req.body;
@@ -11,8 +10,6 @@ export default async (req, res) => {
             data: data,
             skipDuplicates: true
         });
-
-
 
         return res.status(200).json({ result });
     } catch (error) {

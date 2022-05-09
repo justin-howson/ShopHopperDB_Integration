@@ -19,7 +19,7 @@ const Lightspeed = () => {
         const result = await response.json();
         console.log('/lightspeed.js - result: ', result);
         // const num = res.result.length;
-        setNumberReceived(result.result.count);
+        setNumberReceived(result?.result?.count);
     };
 
     const removeProducts = async (business_name) => {
