@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+     provider        = "prisma-client-js"
+     previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+   }
+   
+   datasource db {
+     provider          = "postgresql"
+     url               = env("DB_URL")
+     shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+   }
+   
+   model TemplateClass {
+     id         Int      @id @default(autoincrement())
+     class_name String   @unique
+     items      String[]
+     isSet      Boolean
+     submitted  Boolean
+     updated_at DateTime @default(now())
+     created_at DateTime @default(now())
+   
+     @@map("template_classes")
+   }
+   
+   model Status {
+     id            Int      @id @default(autoincrement())
+     updated_at    DateTime @default(now())
+     products      Int
+     business_name String   @unique
+   
+     @@map("statuses")
+   }
+   
+   model Shop {
+     id              Int      @id @default(autoincrement())
+     created_at      DateTime @default(now())
+     domain          String   @unique
+     business_name   String
+     buckets         String[]
+     site_host       String?
+     vertical        String?
+     name            String?
+     site            String?
+     type            String?
+     phone           String?
+     borough         String?
+     street          String?
+     city            String?
+     postal_code     String?
+     province        String?
+     country         String?
+     latitude        String?
+     longitude       String?
+     rating          String?
+     reviews         String?
+     photo           String?
+     street_view     String?
+     working_hours   Json?
+     place_id        String?
+     banner_image    String?
+     logo            String?
+     email           String?
+     consumer_key    String?
+     consumer_secret String?
+     is_integrated   String?
+     is_partner      Boolean @default(false)
+     return_policy   String?
+   
+     @@map("shops")
+   }
+   
+   model Product {
+     // nit: an integer ID leaks the number of products in the database.
+     sh_id            Int      @id @default(autoincrement())
+     id               String   @unique
+     title            String   @unique
+     business_name    String?
+     url              String?
+     place_id         String?
+     handle           String?
+     vendor           String?
+     // using an array may make future queries slow. It _may_ make sense
+     // to have a tag table instead, and use joins. Its a bit more complex,
+     // but it allows for other interesting features such as easily listing all tags,
+     // renaming tags, users have a selection of preferred tags, etc.
+     tags             String[]
+     variants         Json?
+     images           Json?
+     options          Json?
+     rating           Int?     @default(0)
+     body_html        String?
+     created_at       DateTime @default(now())
+     product_type     String?
+     published_at     DateTime @default(now())
+     updated_at       DateTime @default(now())
+     colors           String[]
+     gender           String?
+     compare_at_price Int?
+     original_price   Int?
+     sizes            String[]
+     buckets          String[]
+     is_on_sale       Boolean?
+     sale_ratio       Int?
+     is_available     Boolean?
+   
+     @@map("products")
+   }
+   
+   model User {
+     id             String    @id @default(cuid())
+     name           String?
+     email          String?   @unique
+     emailVerified  DateTime?
+     password       String?
+     birthdate      String?
+     gender         String?
+     image          String?
+     role           String?
+     size           Json? // JSON columns present a migration challenge. Its hard to know the shape of the data in this column if the schema has changed over time
+     buckets        String[]
+     location       Json?
+     favourite      Json?
+     settings       Json?
+     has_latest_app String?
+     age_range      String?
+     cart_ids       String[]
+     wish_list_ids  String[]
+     sessions       Session[]
+   
+     @@map("users")
+   }
+   
+   model SanitizationData {
+     id            String   @id @default(cuid())
+     colors        String[]
+     sizes         String[]
+     product_types String[]
+   }
+   
+   model Session {
+     id           String   @id @default(cuid())
+     sessionToken String   @unique
+     userId       String
+     expires      DateTime
+     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+   }
+   
+   model VerificationToken {
+     identifier String
+     token      String   @unique
+     expires    DateTime
+   
+     @@unique([identifier, token])
+   }
+   
+   model ShopifySession {
+     id          String @id @default(cuid())
+     sessionId   String @unique
+     sessionData String
+   }
+   
+   model ShopifyShop {
+     id               String @id @default(cuid())
+     shopifyShopId    String @unique
+     domain           String @unique
+     name             String
+     country          String
+     city             String
+     storeAccessToken String
+   
+     // This is an easy way to support shop updates during the onboarding flow.
+     // eventually we should remove this and just use a user account.
+     accessToken String @unique
+   
+     onboardingCompleted     Boolean @default(false)
+     onboardingInfoCompleted Boolean @default(false)
+     termsAccepted           Boolean @default(false)
+   }

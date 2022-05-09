@@ -1,11 +1,11 @@
-import { getLightspeedProducts } from '../../../backend/lightspeed-api';
+import { main } from '../../../backend/lightspeed-api';
 import prisma from '../../../prisma/prisma.js';
 
 
 export default async (req, res) => {
     try {
         const { business_name, product_type } = req.body;
-        const data = await getLightspeedProducts(business_name, product_type);
+        const data = await main(business_name, product_type);
 
         const result = await prisma.product.createMany({
             data: data,
