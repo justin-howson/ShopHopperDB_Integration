@@ -1,0 +1,257 @@
+import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const WooCommerce = () => {
+    const [isFetching, setIsFetching] = useState(false);
+    const [numberReceived, setNumberReceived] = useState(0);
+    const [itemsRemoved, setItemsRemoved] = useState(false);
+
+    const uploadProducts = async () => {
+        setItemsRemoved(false);
+        setIsFetching(true);
+        const response = await fetch('/api/soledoc-scraper', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        setIsFetching(false);
+
+        const result = await response.json();
+        console.log('/soledoc.js - result: ', result);
+        // const num = res.result.length;
+        setNumberReceived(result?.result?.count);
+    };
+
+    const removeProducts = async (business_name) => {
+        setNumberReceived(0);
+        const response = await fetch('/api/soledoc-scraper/removeProducts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            setItemsRemoved(true);
+        }
+    };
+
+    const uploadProducts2 = async () => {
+        setItemsRemoved(false);
+        setIsFetching(true);
+        const response = await fetch('/api/amni-apparel-scraper', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        setIsFetching(false);
+
+        const result = await response.json();
+        console.log('/amni-appparel.js - result: ', result);
+        // const num = res.result.length;
+        setNumberReceived(result?.result?.count);
+    };
+
+    const removeProducts2 = async (business_name) => {
+        setNumberReceived(0);
+        const response = await fetch('/api/amni-apparel-scraper/removeProducts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            setItemsRemoved(true);
+        }
+    };
+
+    const uploadProducts3 = async () => {
+        setItemsRemoved(false);
+        setIsFetching(true);
+        const response = await fetch('/api/wearabouts-scraper', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        setIsFetching(false);
+
+        const result = await response.json();
+        console.log('/wearabouts.js - result: ', result);
+        // const num = res.result.length;
+        setNumberReceived(result?.result?.count);
+    };
+
+    const removeProducts3 = async (business_name) => {
+        setNumberReceived(0);
+        const response = await fetch('/api/wearabouts-scraper/removeProducts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            setItemsRemoved(true);
+        }
+    };
+
+    const uploadProducts4 = async () => {
+        setItemsRemoved(false);
+        setIsFetching(true);
+        const response = await fetch('/api/nge-scraper', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        setIsFetching(false);
+
+        const result = await response.json();
+        console.log('/nge.js - result: ', result);
+        // const num = res.result.length;
+        setNumberReceived(result?.result?.count);
+    };
+
+    const removeProducts4 = async (business_name) => {
+        setNumberReceived(0);
+        const response = await fetch('/api/nge-scraper/removeProducts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            setItemsRemoved(true);
+        }
+    };
+
+    return (
+        <Wrapper>
+            <Left>
+                <h1>SoleDoc Scraper</h1>
+                <p>Get Products will scrape all products from SoleDoc.ca and place their data in the Shophopper Database</p>
+                {isFetching && <div>Getting products...</div>}
+                <Div>
+                    <button onClick={() => uploadProducts()}>Get Products</button>
+
+                    <Right>
+                        <p fontSize={16}>{isFetching && 'Scraping Products from SoleDoc'}</p>
+
+                        {numberReceived > 0 && <p fontSize={16}>{`${numberReceived} items added to database`}</p>}
+                    </Right>
+                </Div>
+                <p>Clear Products will remove all SoleDoc products from the database</p>
+                <Div>
+                    <button onClick={() => removeProducts()}>Clear Products</button>
+                    <Right>
+                        <p fontSize={16}>{itemsRemoved && 'All Soledoc Products removed from Database'}</p>
+                    </Right>
+                </Div>
+            </Left>
+            <Left>
+                <h1>Amni Apparel Scraper</h1>
+                <p>Get Products will scrape all products from Amni Apparel and place their data in the Shophopper Database</p>
+                {isFetching && <div>Getting products...</div>}
+                <Div>
+                    <button onClick={() => uploadProducts2()}>Get Products</button>
+
+                    <Right>
+                        <p fontSize={16}>{isFetching && 'Scraping Products from Amni Apparel'}</p>
+
+                        {numberReceived > 0 && <p fontSize={16}>{`${numberReceived} items added to database`}</p>}
+                    </Right>
+                </Div>
+                <p>Clear Products will remove all Alpaca products from the database</p>
+                <Div>
+                    <button onClick={() => removeProducts2()}>Clear Products</button>
+                    <Right>
+                        <p fontSize={16}>{itemsRemoved && 'All Amni Apparel Products removed from Database'}</p>
+                    </Right>
+                </Div>
+            </Left>
+            <Left>
+                <h1>Wearabouts Scraper</h1>
+                <p>Get Products will scrape all products from Wearabouts.ca and place their data in the Shophopper Database</p>
+                {isFetching && <div>Getting products...</div>}
+                <Div>
+                    <button onClick={() => uploadProducts3()}>Get Products</button>
+
+                    <Right>
+                        <p fontSize={16}>{isFetching && 'Scraping Products from Wearabouts'}</p>
+
+                        {numberReceived > 0 && <p fontSize={16}>{`${numberReceived} items added to database`}</p>}
+                    </Right>
+                </Div>
+                <p>Clear Products will remove all Wearabouts products from the database</p>
+                <Div>
+                    <button onClick={() => removeProducts3()}>Clear Products</button>
+                    <Right>
+                        <p fontSize={16}>{itemsRemoved && 'All Wearabouts Products removed from Database'}</p>
+                    </Right>
+                </Div>
+            </Left>
+            <Left>
+                <h1>Naughty Girl Essentials Scraper</h1>
+                <p>Get Products will scrape all products from Naughty Girl Essentials and place their data in the Shophopper Database</p>
+                {isFetching && <div>Getting products...</div>}
+                <Div>
+                    <button onClick={() => uploadProducts4()}>Get Products</button>
+
+                    <Right>
+                        <p fontSize={16}>{isFetching && 'Scraping Products from Naughty Girl Essentials'}</p>
+
+                        {numberReceived > 0 && <p fontSize={16}>{`${numberReceived} items added to database`}</p>}
+                    </Right>
+                </Div>
+                <p>Clear Products will remove all Naughty Girl Essentials products from the database</p>
+                <Div>
+                    <button onClick={() => removeProducts4()}>Clear Products</button>
+                    <Right>
+                        <p fontSize={16}>{itemsRemoved && 'All Naughty Girl Essentials Products removed from Database'}</p>
+                    </Right>
+                </Div>
+            </Left>
+        </Wrapper>
+
+        
+    );
+};
+
+export default WooCommerce;
+// ---------------------------STYLES-------------------------------------------//
+
+const Wrapper = styled.div`
+    width: 100%;
+    display: flex;
+    position: relative;
+    gap: 25px;
+    padding: 6%;
+    color: grey;
+`;
+
+const Left = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    p-align: left;
+    margin-left: -10px;
+    z-index: 5;
+    position: relative;
+    padding: 20px;
+    gap: 15px;
+`;
+
+const Right = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    padding-top: 33px;
+    color: #65a4b8;
+`;
+const Div = styled.div`
+    height: 100px;
+    position: relative;
+`;

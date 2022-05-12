@@ -18,7 +18,7 @@ const body_html = [];
 console.time('execution');
 
 export async function main() {
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < so.SITE_OBJECTS.length; i++) {
         product_urls.push(await url_scraper.scrapeProductUrls(so.SITE_OBJECTS[i]));
     }
 
@@ -29,40 +29,12 @@ export async function main() {
 
             let json = await response.json();
 
-            // const data = {
-            //     id: 'String',
-            //     title: 'String',
-            //     business_name: 'String',
-            //     url: 'String',
-            //     place_id: 'String',
-            //     handle: 'String',
-            //     vendor: 'String',
-            //     tags: 'String',
-            //     variants: {},
-            //     images: {},
-            //     options: {},
-            //     rating: 1234,
-            //     body_html: 'String',
-            //     created_at: new Date(),
-            //     product_type: 'String',
-            //     published_at: new Date(),
-            //     updated_at: new Date(),
-            //     colors: 'String',
-            //     gender: 'String',
-            //     compare_at_price: 1234,
-            //     original_price: 1234,
-            //     sizes: 'String',
-            //     buckets: 'String',
-            //     is_on_sale: true,
-            //     sale_ratio: 1234,
-            //     is_available: true
-            // };
-
             data.id = await getId(json);
             data.title = await getTitle(json);
             data.business_name = await scrapeBusinessName(json);
             data.url = await getUrl(json);
-            data.description = await getDescription(json);
+            data.place_id = 'ChIJGYiXHrX1fVMRCcmNL_DV2ak';
+           // data.description = await getDescription(json);
             data.vendor = await getVendor(json);
             data.original_price = await getPrice(json);
             data.compare_at_price = await getCompareAtPrice(json);
@@ -70,6 +42,7 @@ export async function main() {
             data.images = await getImages(json);
             data.tags = await getTags(json);
             data.body_html = await getBodyHtml(json);
+            data.is_available = await getInStock(json);
 
             await result.push(data);
         }
@@ -90,7 +63,7 @@ async function getTitle(productJson) {
 }
 
 async function getId(productJson) {
-    return productJson['id'];
+    return productJson['id'].toString();
 }
 
 async function getVendor(productJson) {
@@ -167,7 +140,7 @@ async function getPrice(productJson) {
     let priceString = productJson['price']['price_money_without_currency'];
     priceString = priceString.replace('.', '');
 
-    return +priceString;
+    return parseInt(priceString);
 }
 
 async function getCompareAtPrice(productJson) {

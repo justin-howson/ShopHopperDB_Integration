@@ -36,7 +36,7 @@ async function scrapeMain(url,page) {
 
         const title = titleElement.find('a').text();
 
-        const business_name = $("title").text().split('|')[0].split('s')[1];
+        const business_name = $("title").text().split('|')[0].split('s')[1].trim();
 
         const url = titleElement.find('a').attr('href');
 
@@ -67,7 +67,6 @@ async function scrapeSecondary(item,page)
         const $ = await cheerio.load(html);
         await sleep(1000);
         
-        item[i].tags = [];
          
         //get sizes and colors to make variants
         let sizes = [];
@@ -101,45 +100,19 @@ async function scrapeSecondary(item,page)
        
             return{src,position};
         }).get();
-
-        item[i].options = null;
-
-        item[i].rating = null;
-
-      
-       
+   
     //body html
     item[i].body_html = $("#description-content").html();
     
-    item[i].created_at = Date.now();
-
-
-
-      
     //product_type
     item[i].product_type = $(".breadcrumbs li:nth-child(2)").text().trim();
 
-    item[i].published_at = Date.now();
-
-    item[i].updated_at = Date.now();
-         
     //colors
     item[i].colors = colors;
 
-    item[i].gender = null;
-
-
- 
     //price
-    item[i].compare_at_price = price;
-    item[i].original_price = price;
-
-    item[i].sizes = [];
-    item[i].buckets = [];
-    item[i].is_on_sale = null;
-    item[i].sale_ratio = null;
-    item[i].is_available = null;
-
+    item[i].compare_at_price = parseInt(price);
+    item[i].original_price = parseInt(price);
       
     }
 
@@ -216,13 +189,17 @@ export async function main()
     const item_info = await scrapeSecondary(item_title_and_url,page);
 
     // convert JSON object to string
-    const data = JSON.stringify(item_info);
+    let data = JSON.stringify(item_info);
 
     // write JSON string to a file
     await writeJSOn("backend/AlpacaScraper/alpaca.json",data);
+
+    data = item_info;
+
+    return data;
 }
 
-//m();
+//main();
 
 
 //---------------utility functions--------------------------------//

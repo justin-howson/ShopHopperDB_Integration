@@ -38,23 +38,23 @@ const Alpaca = () => {
     return (
         <Wrapper>
             <Left>
-                <h1>Fossellos Scraper</h1>
-                <p>Get Products will scrape all Tops from Fossellos and place their data in the Shophopper Database</p>
+                <h1>Alpaca Scraper</h1>
+                <p>Get Products will scrape all products from Alpaca Clothing Canada and place their data in the Shophopper Database</p>
                 {isFetching && <div>Getting products...</div>}
                 <Div>
                     <button onClick={() => uploadProducts()}>Get Products</button>
 
                     <Right>
-                        <p fontSize={16}>{isFetching && 'Scraping Tops from Fossellos'}</p>
+                        <p fontSize={16}>{isFetching && 'Scraping Products from Alpaca Clothing Canada'}</p>
 
                         {numberReceived > 0 && <p fontSize={16}>{`${numberReceived} items added to database`}</p>}
                     </Right>
                 </Div>
-                <p>Clear Products will remove all Fossellos products from the database</p>
+                <p>Clear Products will remove all Alpaca products from the database</p>
                 <Div>
                     <button onClick={() => removeProducts()}>Clear Products</button>
                     <Right>
-                        <p fontSize={16}>{itemsRemoved && 'All Fossellors Products removed from Database'}</p>
+                        <p fontSize={16}>{itemsRemoved && 'All Alpaca Products removed from Database'}</p>
                     </Right>
                 </Div>
             </Left>
