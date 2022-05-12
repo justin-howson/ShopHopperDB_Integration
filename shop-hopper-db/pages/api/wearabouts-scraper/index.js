@@ -1,4 +1,4 @@
-import { main } from '../../../backend/AlpacaScraper';
+import { main } from '../../../backend/WooCommerceScrapers/wearabouts';
 import prisma from '../../../prisma/prisma.js';
 
 
