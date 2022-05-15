@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 
 const clothing_url = "https://naughtygirlessentials.com/product-category/clothing/";
-const lingerie_url = "https://naughtygirlessentials.com/product-category/lingerie/";
+//const lingerie_url = "https://naughtygirlessentials.com/product-category/lingerie/";
 const bra_url = "https://naughtygirlessentials.com/product-category/bras/";
 const underwear_url = "https://naughtygirlessentials.com/product-category/panties/";
 
@@ -29,9 +29,9 @@ async function scrapeMain(url,page) {
     result = $('.product-type-variable').map((index,element) =>{
         
         const titleElement = $(element).find(".woocommerce-loop-product__title");
-        const urlElement = $(element).find(".woocommerce-loop-product__link");
+        const urlElement = $(element).find(".product-wrap").find("a");
         
-        const id = $(element).attr("class").split(" ")[2].split("-")[1];;
+        const id = $(element).attr("class").split(" ")[3].split("-")[1];
         const title = titleElement.text();
         const business_name = $("title").text().split("-")[1].trim(); 
         const url = urlElement.attr('href');
@@ -138,19 +138,27 @@ async function scrapeSecondary(item,page)
     }
 
     //prices
-    item[i].compare_at_price = parseInt($('.elementor-widget-woocommerce-product-price > div > p > span > span > bdi').text().replace('$','').replace('.','').trim());
+    item[i].compare_at_price = $('p.price.nectar-inherit-default > span > bdi').text().replace('$','').replace('.','').trim();
 
     item[i].original_price = item[i].compare_at_price;
     
     if(item[i].original_price.length == 0)
     {
-        item[i].original_price =  parseInt($('.elementor-widget-woocommerce-product-price > div > p > span > ins > span > bdi').text().replaceAll('$','').replaceAll('.','').trim());
-        item[i].compare_at_price = parseInt($(".elementor-widget-woocommerce-product-price > div > p > span > del > span > bdi").text().replaceAll('$','').replaceAll('.','').trim());
+        item[i].original_price =  $("p.price.nectar-inherit-default > ins > span > bdi").text().replaceAll('$','').replaceAll('.','').trim();
+        item[i].compare_at_price = $('p.price.nectar-inherit-default > del > span > bdi').text().replaceAll('$','').replaceAll('.','').trim();
     }
     else if(item[i].original_price.length > 0 && item[i].original_price.indexOf('$')>-1)
     {
-        item[i].original_price = parseInt($('.elementor-widget-woocommerce-product-price > div > p > span > span:nth-child(1) > bdi').text().replaceAll('$','').replaceAll('.','').trim());
-        item[i].compare_at_price = parseInt($('.elementor-widget-woocommerce-product-price > div > p > span > span:nth-child(2) > bdi').text().replaceAll('$','').replaceAll('.','').trim());
+        item[i].original_price = $('p.price.nectar-inherit-default > span:nth-child(1) > bdi').text().replaceAll('$','').replaceAll('.','').trim();
+        item[i].compare_at_price = $('p.price.nectar-inherit-default > span:nth-child(2) > bdi').text().replaceAll('$','').replaceAll('.','').trim();
+    }
+
+    item[i].original_price = parseInt(item[i].original_price);
+    item[i].compare_at_price = parseInt(item[i].compare_at_price);
+
+    if(item[i].original_price== null && item[i].compare_at_price == "NaN")
+    {
+        console.log("g"); 
     }
 
     }
@@ -165,7 +173,7 @@ export async function main()
 
     //scrape products
     const clothing_title_and_url = await scrapeMain(clothing_url,page);
-    const lingerie_title_and_url = await scrapeMain(lingerie_url,page);
+    //const lingerie_title_and_url = await scrapeMain(lingerie_url,page);
     const bra_title_and_url = await scrapeMain(bra_url,page);
     const uw_title_and_url = await scrapeMain(underwear_url,page);
     const products_info = await scrapeSecondary(uw_title_and_url,page);
@@ -177,7 +185,7 @@ export async function main()
     data = cleaned_info;
 
     return data;
-  
+
 }
 
 //main();

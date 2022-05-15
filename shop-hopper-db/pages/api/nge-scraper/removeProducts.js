@@ -4,7 +4,7 @@ export default async (req, res) => {
     try {
         let products = await prisma.product.deleteMany({
             where: {
-                business_name: 'Naughty Girl Essentials Lingerie'
+                business_name: 'Naughty Girl Essentials'
             }
         });
 
