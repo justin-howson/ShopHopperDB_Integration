@@ -131,15 +131,19 @@ async function scrapeSecondary(item,page)
     item[i].colors = $('.woocommerce-product-attributes-item--attribute_pa_color').find('.woocommerce-product-attributes-item__value').text().trim().split(',');
  
     //price
-    item[i].compare_at_price = parseInt($('.et_pb_wc_price_0_tb_body > div > p > span').find('bdi').text().replace('$','').replace('.',''));
+    item[i].compare_at_price = $('.et_pb_wc_price_0_tb_body > div > p > span').find('bdi').text().replace('$','').replace('.','');
 
     item[i].original_price = item[i].compare_at_price;
 
     if(item[i].original_price.length == 0)
     {
-        item[i].original_price = parseInt($('.et_pb_wc_price_0_tb_body > div > p > ins > span').find('bdi').text().replace('$','').replace('.',''));
-        item[i].compare_at_price = parseInt($('.et_pb_wc_price_0_tb_body > div > p > del > span').find('bdi').text().replace('$','').replace('.',''));
+        item[i].original_price = $('.et_pb_wc_price_0_tb_body > div > p > ins > span').find('bdi').text().replace('$','').replace('.','');
+        item[i].compare_at_price = $('.et_pb_wc_price_0_tb_body > div > p > del > span').find('bdi').text().replace('$','').replace('.','');
     }
+
+    item[i].original_price = parseInt(item[i].original_price);
+    item[i].compare_at_price = parseInt(item[i].compare_at_price);
+
          
     }
     
