@@ -1,0 +1,30 @@
+[
+    {
+        "id": "11ecd9f9f4ec66a1b57d0cc47a2b63e4",
+        "title": "Antonnella Blouse",
+        "url": "product/antonnella-blouse/694",
+        "business_name": "Morgane",
+        "place_id": "962101679689053553",
+        "colors": [],
+        "product_type": "physical",
+        "original_price": 8900,
+        "sizes": [
+            "Large",
+            "Small",
+            "XS"
+        ],
+        "images": [
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i1_w2400.jpeg",
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i2_w2400.jpeg",
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i3_w2400.jpeg",
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i4_w2400.jpeg",
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i5_w2400.jpeg",
+            "https://morganekelowna.weebly.com/uploads/1/3/2/5/132504777/s962101679689053553_p694_i6_w2400.jpeg"
+        ],
+        "created_at": "2022-05-22T18:06:52+00:00",
+        "updated_at": "2022-05-22T18:34:49+00:00",
+        "is_on_sale": false,
+        "rating": null,
+        "body_html": "Soaked in Luxury"
+    }
+]
