@@ -6,7 +6,7 @@ get[Datapoint] - Each of these functions returns [Datapoint] from the .ajax site
 */
 
 const fetch = require('node-fetch');
-fs = require('fs');
+//fs = require('fs');
 
 const so = require('./site_objects.js');
 const url_scraper = require('./product_url_scraper');
@@ -15,19 +15,17 @@ const result = [];
 const product_urls = [];
 const body_html = [];
 
-console.time("execution")
+console.time('execution');
 
-async function main() {
-
+export async function main() {
     for (var i = 0; i < so.SITE_OBJECTS.length; i++) {
-        product_urls.push(await url_scraper.scrapeProductUrls(so.SITE_OBJECTS[i]))
+        product_urls.push(await url_scraper.scrapeProductUrls(so.SITE_OBJECTS[i]));
     }
 
-    for(var i = 0; i < product_urls.length; i++) {
-        for(var j = 0; j < product_urls[i].length; j++) {
-
-            var data = {}
-            let response = await fetch(product_urls[i][j])
+    for (var i = 0; i < 1; i++) {
+        for (var j = 0; j < product_urls[i].length; j++) {
+            var data = {};
+            let response = await fetch(product_urls[i][j]);
 
             let json = await response.json();
 
@@ -35,26 +33,27 @@ async function main() {
             data.title = await getTitle(json);
             data.business_name = await scrapeBusinessName(json);
             data.url = await getUrl(json);
-            data.description = await getDescription(json);
+            data.place_id = 'ChIJGYiXHrX1fVMRCcmNL_DV2ak';
+           // data.description = await getDescription(json);
             data.vendor = await getVendor(json);
-            data.price = await getPrice(json);
+            data.original_price = await getPrice(json);
             data.compare_at_price = await getCompareAtPrice(json);
-            data.available = await getInStock(json);
             data.variants = await getVariants(json);
             data.images = await getImages(json);
             data.tags = await getTags(json);
             data.body_html = await getBodyHtml(json);
-            
+            data.is_available = await getInStock(json);
+
             await result.push(data);
         }
     }
 
     await console.log(result);
-    await console.log("Number of items scraped: " + result.length);
-
+    await console.log('Number of items scraped: ' + result.length);
+    return result;
     //Write to output file
-    fs.writeFileSync('./lightspeedOutputJson.json', JSON.stringify(result, null, 4));
-    console.timeEnd("execution");
+    //fs.writeFileSync('./lightspeedOutputJson.json', JSON.stringify(result, null, 4));
+    console.timeEnd('execution');
 }
 
 /* API FUNCTIONS */
@@ -64,7 +63,7 @@ async function getTitle(productJson) {
 }
 
 async function getId(productJson) {
-    return productJson['id'];
+    return productJson['id'].toString();
 }
 
 async function getVendor(productJson) {
@@ -76,32 +75,34 @@ async function getVariants(productJson) {
 
     async function scrubVariants() {
         cleanVariants = [];
-        
+
         async function getVariantSize(title) {
             let variantSize;
             let sizeString;
-        
+
             // title = title.split(',');
-            
-            variantSize = title.substring(title.indexOf('S') + 6)
-            
-            variantSize = variantSize.replace('"', '').replace('\"', '');
+
+            variantSize = title.substring(title.indexOf('S') + 6);
+
+            variantSize = variantSize.replace('"', '').replace('"', '');
             return variantSize;
         }
-        
-        await Object.keys(productJson['variants']).forEach(async key => cleanVariants.push({
-            id : key,
-            sku : productJson['variants'][key]['sku'],
-            price : productJson['variants'][key]['price']['price_money_without_currency'],
-            size : await getVariantSize(productJson['variants'][key]['title']),
-            title : productJson['variants'][key]['title'],
-            available : productJson['variants'][key]['stock']['available'],
-            compare_at_price : productJson['variants'][key]['price']['price_old_money_without_currency'],
-        }));
+
+        await Object.keys(productJson['variants']).forEach(async (key) =>
+            cleanVariants.push({
+                id: key,
+                sku: productJson['variants'][key]['sku'],
+                price: productJson['variants'][key]['price']['price_money_without_currency'],
+                size: await getVariantSize(productJson['variants'][key]['title']),
+                title: productJson['variants'][key]['title'],
+                available: productJson['variants'][key]['stock']['available'],
+                compare_at_price: productJson['variants'][key]['price']['price_old_money_without_currency']
+            })
+        );
 
         return cleanVariants;
     }
-    
+
     return await scrubVariants();
 }
 
@@ -117,76 +118,73 @@ async function getTags(productJson) {
 async function getImages(productJson) {
     let images = productJson['images'];
     let finalImages = [];
-    let finalImage = "";
+    let finalImage = '';
     try {
-        images.forEach(async image => {
-            imageSplit = await image.split('/')
-            imageSplit[7] = '500x500x2'
+        images.forEach(async (image) => {
+            let imageSplit = await image.split('/');
+            imageSplit[7] = '500x500x2';
             image = imageSplit.toString();
 
             finalImage = imageSplit.toString().split(',').join('/');
-            
+
             finalImages.push(finalImage);
-        })
+        });
 
         return finalImages;
     } catch (err) {
-        console.log("Error getting images")
+        console.log('Error getting images');
     }
 }
 
 async function getPrice(productJson) {
     let priceString = productJson['price']['price_money_without_currency'];
     priceString = priceString.replace('.', '');
-    
-    return priceString;
+
+    return parseInt(priceString);
 }
 
 async function getCompareAtPrice(productJson) {
     try {
-        let comparePriceString = productJson['price']['price_old_money_without_currency']    
+        let comparePriceString = productJson['price']['price_old_money_without_currency'];
         comparePriceString = comparePriceString.replace('.', '');
 
-        return comparePriceString;
+        return +comparePriceString;
     } catch (err) {
         return;
     }
 }
 
 async function getDescription(productJson) {
-    return productJson['description']
+    return productJson['description'];
 }
 
 async function getInStock(productJson) {
-    return productJson['stock']['available']
+    return productJson['stock']['available'];
 }
 
 async function getUrl(productJson) {
-    return productJson['url']
+    return productJson['url'];
 }
-
 
 /* UTILITY FUNCTIONS */
 
 async function scrapeBusinessName(productJson) {
     const url = await getUrl(productJson);
-    startPos = url.indexOf('.');
-    endPos = url.indexOf('.', startPos + 1);
+    let startPos = url.indexOf('.');
+    let endPos = url.indexOf('.', startPos + 1);
 
     return url.substring(startPos + 1, endPos);
-
 }
 
 async function getBodyHtml(productJson) {
-    let url = await getUrl(productJson)
-    
+    let url = await getUrl(productJson);
+
     return url_scraper.body_html[url];
 }
 
 //Stops the program for a specified number of seconds
-async function sleep(miliseconds)
-{
-    return new Promise(resolve => setTimeout(resolve,miliseconds));
+async function sleep(miliseconds) {
+    return new Promise((resolve) => setTimeout(resolve, miliseconds));
 }
 
-main();
+//main();

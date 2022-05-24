@@ -1,3 +1,5 @@
+import { data } from 'cheerio/lib/api/attributes';
+
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
@@ -34,21 +36,25 @@ async function scrapeMain(url,page) {
 
         const title = titleElement.find('a').text();
 
-        const business_name = $("title").text().split('|')[0].split('s')[1];
+        const business_name = $("title").text().split('|')[0].split('s')[1].trim();
 
         const url = titleElement.find('a').attr('href');
 
+        const place_id = null;
+        
+        const handle = null;
+
         const vendor = business_name;
 
-        return{id,title,business_name,url,vendor};
+        return{id,title,business_name,url,place_id,handle,vendor};
     }).get();
        
         finalres.push(result);
         
     }
 
-  finalres = finalres.flat();
-  return finalres;
+  data = finalres.flat();
+  return data;
 }
 
 async function scrapeSecondary(item,page)
@@ -61,7 +67,7 @@ async function scrapeSecondary(item,page)
         const $ = await cheerio.load(html);
         await sleep(1000);
         
-        
+         
         //get sizes and colors to make variants
         let sizes = [];
         $(".form-option-variant").each((index,element) => 
@@ -94,20 +100,19 @@ async function scrapeSecondary(item,page)
        
             return{src,position};
         }).get();
-      
-       
+   
     //body html
     item[i].body_html = $("#description-content").html();
-      
+    
     //product_type
     item[i].product_type = $(".breadcrumbs li:nth-child(2)").text().trim();
-         
+
     //colors
     item[i].colors = colors;
- 
+
     //price
-    item[i].compare_at_price = price;
-    item[i].original_price = price;
+    item[i].compare_at_price = parseInt(price);
+    item[i].original_price = parseInt(price);
       
     }
 
@@ -174,7 +179,7 @@ async function get_variants(price,colors,sizes)
 
 
 //main function to call all scraping functions
-async function m()
+export async function main()
 {
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
@@ -184,13 +189,17 @@ async function m()
     const item_info = await scrapeSecondary(item_title_and_url,page);
 
     // convert JSON object to string
-    const data = JSON.stringify(item_info);
+    let data = JSON.stringify(item_info);
 
     // write JSON string to a file
     await writeJSOn("backend/AlpacaScraper/alpaca.json",data);
+
+    data = item_info;
+
+    return data;
 }
 
-m();
+//main();
 
 
 //---------------utility functions--------------------------------//
