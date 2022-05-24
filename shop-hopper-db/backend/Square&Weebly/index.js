@@ -13,6 +13,8 @@ export const scrapeAll = async ()=> {
    //await sassyShoes.main(sassyShoes.baseURL);
    //await tigerLily.main(tigerLily.baseURL);
 
+   console.log(data);
+
    return data;
 
 }

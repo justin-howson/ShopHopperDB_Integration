@@ -19,14 +19,18 @@ const main = async (urlCall) =>{
     const data = await Object.values(response.data.data).map(async item =>{
         count++;
 
-        const id = item.id;
+        const id = item.id.toString();
         const title = item.name;
         const business_name = businessName;
         const url = item.site_link;
         const place_id = item.site_id;
-        //const colors = [];
+        //handle
+        const colors = [];
+        //vendor
+        const tags = [];
         const product_type = item.product_type;
         const original_price = item.price.high_subunits;
+        const compare_at_price = original_price;
         let productId = getId(url);
         const sizes = await getSizes(productId);
         //const images = item.images;
@@ -43,19 +47,21 @@ const main = async (urlCall) =>{
         return{
             id,
             title,
-            url,
             business_name,
+            url,
             place_id,
-            //colors,
-            product_type,
-            original_price,
-            sizes,
+            tags,
             images,
-            created_at,
-            updated_at,
-            is_on_sale,
             rating,
-            body_html
+            body_html,
+            //created_at,
+            product_type,
+            //updated_at,
+            colors,
+            compare_at_price,
+            original_price,
+            sizes, 
+            is_on_sale
         };
 
     });
@@ -122,18 +128,25 @@ const getSizes = async (productId)=> {
 }
 
 const getImages = async (arr) =>{
+
     let images = [];
+    let src;
     for(let i=0; i<arr.length; i++){
 
-        for(let img in arr[i]){
-            if(img === 'absolute_url'){
-                images.push(arr[i][img])
+        arr.map((index,element) =>{
+            if(element == 'absolute_url'){
+                src = arr[i][index]
+               
             }
+            
+            const position = index + 1;
+       
+            return{src,position};
+        });  
         }
-    }
 
     return images;
 }
 module.exports={main,baseURL,count};
 
-//main(baseURL);
+main(baseURL);
